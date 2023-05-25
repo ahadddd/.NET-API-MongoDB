@@ -1,5 +1,10 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 using WebAPIMongo.Configurations;
 
 namespace WebAPIMongo.Services
@@ -12,10 +17,10 @@ namespace WebAPIMongo.Services
             var mongoClient = new MongoClient(dbSetttings.Value.ConnectionString);
             var mongoDb = mongoClient.GetDatabase(dbSetttings.Value.DatabaseName);
 
-            var _driverCollection = mongoDb.GetCollection<Driver>(dbSetttings.Value.CollectionName);
+            _driverCollection = mongoDb.GetCollection<Driver>(dbSetttings.Value.CollectionName);
         }
 
-        public async Task<List<Driver>> GetDriversAsync()
+        public async Task<List<Driver>> GetDrivers()
         {
             return await _driverCollection.Find(driver => true).ToListAsync();
         }
