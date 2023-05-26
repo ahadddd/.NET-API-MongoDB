@@ -12,12 +12,12 @@ namespace WebAPIMongo.Services
     public class DriverService
     {
         private readonly IMongoCollection<Driver> _driverCollection;
-        public DriverService(IOptions<DbSettings> dbSetttings)
+        public DriverService(IOptions<DbSettings> dbSettings)
         {
-            var mongoClient = new MongoClient(dbSetttings.Value.ConnectionString);
-            var mongoDb = mongoClient.GetDatabase(dbSetttings.Value.DatabaseName);
+            var mongoClient = new MongoClient(dbSettings.Value.ConnectionString);
+            var mongoDb = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
 
-            _driverCollection = mongoDb.GetCollection<Driver>(dbSetttings.Value.CollectionName);
+            _driverCollection = mongoDb.GetCollection<Driver>(dbSettings.Value.CollectionName);
         }
 
         public async Task<List<Driver>> GetDrivers()
@@ -43,6 +43,11 @@ namespace WebAPIMongo.Services
         public async Task DeleteDriver(int number)
         {
             await _driverCollection.DeleteOneAsync(d => d.Number == number);
+        }
+
+        public async Task<Driver> GetDriverWithId(int number)
+        {
+            return await _driverCollection.Find(d => d.Number == number).FirstOrDefaultAsync();
         }
     }
 }
