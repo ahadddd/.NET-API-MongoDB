@@ -95,5 +95,25 @@ namespace WebAPIMongo.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{number}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteDriver(int number)
+        {
+            var driver = _driverService.GetDriver(number);
+            if(driver == null)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _driverService.DeleteDriver(number);
+            return NoContent();
+        }
+
+
     }
 }
